@@ -306,7 +306,7 @@ async function generate() {
   if (imageB64) body.image = imageB64;
 
   try {
-    const r = await fetch('https://openrouter.ai/api/v1/videos/generations', {
+    const r = await fetch('https://openrouter.ai/api/v1/videos', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
@@ -317,17 +317,20 @@ async function generate() {
       body: JSON.stringify(body)
     });
 
-    const raw = await r.json();
-    console.log('API response:', raw);
+    const txt = await r.text();
+    console.log('Submit raw response:', txt);
+    let raw;
+    try { raw = JSON.parse(txt); } catch(_) { throw new Error('Bad response: ' + txt.slice(0, 200)); }
 
     if (!r.ok) throw new Error(raw?.error?.message || raw?.message || `HTTP ${r.status}`);
 
-    // Grab job id from various possible fields
+    // Grab job id + optional status URL from response
     const jobId = raw.id || raw.job_id || raw.generation_id;
-    if (!jobId) throw new Error('No job ID in response: ' + JSON.stringify(raw));
+    const statusUrl = raw.status_url || null;
+    if (!jobId) throw new Error('No job ID. Got: ' + JSON.stringify(raw));
 
     toast('Job submitted, polling...', 'ok');
-    poll(jobId, prompt, body.model);
+    poll(jobId, statusUrl, prompt, body.model);
 
   } catch (err) {
     setBusy(false);
@@ -338,29 +341,35 @@ async function generate() {
 }
 
 // Poll
-function poll(jobId, prompt, model) {
+function poll(jobId, statusUrl, prompt, model) {
   let elapsed = 0;
   const ETA = 90;
   timer = setInterval(async () => {
     elapsed += 5;
     updateProg(Math.min(90, 5 + (elapsed / ETA) * 85), `~${Math.max(0, ETA - elapsed)}s left`);
     try {
-      const r = await fetch(`https://openrouter.ai/api/v1/videos/generations/${jobId}`, {
+      // Use status_url if provided, otherwise construct from job ID
+      const pollUrl = statusUrl || `https://openrouter.ai/api/v1/videos/${jobId}`;
+      const r = await fetch(pollUrl, {
         headers: { 'Authorization': `Bearer ${apiKey}` }
       });
-      const d = await r.json();
-      console.log('Poll response:', d);
+      const txt = await r.text();
+      console.log('Poll raw:', txt);
+      let d;
+      try { d = JSON.parse(txt); } catch(_) { console.warn('Poll non-JSON:', txt.slice(0,200)); return; }
 
       const status = (d.status || '').toLowerCase();
 
       if (status === 'completed' || status === 'succeeded' || status === 'success') {
         clearInterval(timer);
-        // Extract URL from various response shapes
         const url = d.video_url || d.url ||
           d.data?.[0]?.url || d.output?.url ||
           d.result?.url || d.generations?.[0]?.url ||
           d.choices?.[0]?.url;
-        if (!url) { showErr('Video done but no URL found. Check console.'); setBusy(false); setBadge('err','No URL'); return; }
+        if (!url) {
+          showErr('Done but no video URL — check browser console for raw response.');
+          setBusy(false); setBadge('err', 'No URL'); return;
+        }
         updateProg(100, 'Done!');
         setTimeout(() => showVideo(url, prompt, model), 300);
 
@@ -371,8 +380,9 @@ function poll(jobId, prompt, model) {
         showErr(d.error || d.message || 'Generation failed');
         toast('Generation failed', 'err');
       }
+      // any other status (queued, processing) — keep polling
     } catch(e) {
-      console.warn('Poll err:', e);
+      console.warn('Poll fetch err:', e);
     }
   }, 5000);
 }
