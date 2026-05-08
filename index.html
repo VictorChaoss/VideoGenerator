@@ -1,183 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Seedance Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#07070f;--s1:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
-  --bd:rgba(255,255,255,0.09);--pu:#9b5de5;--cy:#00d4ff;
-  --tx:#e8e8f0;--mu:#6b6b80;--ok:#00f5a0;--er:#ff4757;
-}
+:root{--bg:#07070f;--s1:rgba(255,255,255,.04);--s2:rgba(255,255,255,.07);--bd:rgba(255,255,255,.09);--pu:#9b5de5;--cy:#00d4ff;--tx:#e8e8f0;--mu:#6b6b80;--ok:#00f5a0;--er:#ff4757}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:14px}
 body::before{content:'';position:fixed;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(155,93,229,.12) 0%,transparent 70%);pointer-events:none;z-index:0}
 body::after{content:'';position:fixed;bottom:-20%;right:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(0,212,255,.08) 0%,transparent 70%);pointer-events:none;z-index:0}
-
-/* LAYOUT */
 #app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh}
-
-/* HEADER */
-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--bd);backdrop-filter:blur(10px)}
+header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--bd)}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:18px;background:linear-gradient(135deg,var(--pu),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}
-.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--pu),var(--cy));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;-webkit-text-fill-color:white}
-.key-pill{display:flex;align-items:center;gap:6px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cy);cursor:pointer;transition:.2s}
-.key-pill:hover{background:rgba(0,212,255,.18)}
+.logo-i{width:28px;height:28px;background:linear-gradient(135deg,var(--pu),var(--cy));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;-webkit-text-fill-color:white}
+.kpill{display:flex;align-items:center;gap:6px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--cy);cursor:pointer}
+.kpill:hover{background:rgba(0,212,255,.18)}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
-
-/* MAIN */
-main{flex:1;display:grid;grid-template-columns:320px 1fr;gap:16px;padding:16px 24px;min-height:0}
-
-/* SIDEBAR */
-.sidebar{display:flex;flex-direction:column;gap:10px;overflow-y:auto;overflow-x:hidden;padding-right:4px}
-.sidebar::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-track{background:transparent}
-.sidebar::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
-
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:16px}
-.section-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);margin-bottom:12px}
-
-label{display:block;font-size:12px;color:var(--mu);margin-bottom:5px;margin-top:10px}
+main{flex:1;display:grid;grid-template-columns:320px 1fr;gap:16px;padding:16px 24px;min-height:0;overflow:hidden}
+.sidebar{display:flex;flex-direction:column;gap:8px;overflow-y:auto;overflow-x:hidden;padding-right:2px}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.slbl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);margin-bottom:10px}
+label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px;margin-top:10px}
 label:first-of-type{margin-top:0}
-textarea,select,input[type=password]{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;color:var(--tx);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;resize:none}
-textarea:focus,select:focus,input:focus{border-color:var(--pu)}
+textarea,select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;color:var(--tx);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;resize:none}
+textarea:focus,select:focus{border-color:var(--pu)}
 select{appearance:none;cursor:pointer}
 select option{background:#12121f}
-#prompt{min-height:80px;line-height:1.5}
+#prompt{min-height:72px;line-height:1.5}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-/* Upload */
-.upload-zone{margin-top:10px;border:2px dashed var(--bd);border-radius:10px;padding:14px 12px;text-align:center;cursor:pointer;transition:.2s;position:relative}
-.upload-zone:hover,.upload-zone.over{border-color:var(--pu);background:rgba(155,93,229,.07)}
-.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-zone p{font-size:12px;color:var(--mu)}
-.upload-zone span{font-size:20px}
-.img-wrap{position:relative;margin-top:8px}
-.img-wrap img{width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--bd)}
-.img-clear{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.15);color:white;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.img-clear:hover{background:rgba(255,71,87,.8)}
-.img-tag{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(155,93,229,.15);color:var(--pu)}
-
-/* Generate btn */
-.btn-gen{width:100%;padding:13px;background:linear-gradient(135deg,var(--pu),#5a1fb5);border:none;border-radius:10px;color:white;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;margin-top:4px}
-.btn-gen:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(155,93,229,.4)}
-.btn-gen:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-
-/* Style Presets */
-.style-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--mu);cursor:pointer;transition:.2s;user-select:none}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid var(--bd);background:rgba(255,255,255,.03);color:var(--mu);cursor:pointer;transition:.2s;user-select:none}
 .chip:hover{border-color:var(--pu);color:var(--tx)}
-.chip.active{border-color:var(--pu);background:rgba(155,93,229,.18);color:var(--pu)}
-.chip.sp-active{border-color:#f4a236;background:rgba(244,162,54,.15);color:#f4a236}
-.style-hint{font-size:10px;color:var(--mu);margin-top:6px;padding:7px 10px;background:rgba(244,162,54,.07);border:1px solid rgba(244,162,54,.2);border-radius:8px;line-height:1.5;display:none}
-.style-hint.show{display:block}
-
-/* RIGHT PANEL */
-.right{display:flex;flex-direction:column;gap:12px;min-height:0}
-.preview-card{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:14px;display:flex;flex-direction:column;min-height:0}
-.preview-head{padding:12px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.preview-head h2{font-size:13px;font-weight:600}
-.badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
-.b-idle{background:rgba(107,107,128,.2);color:var(--mu)}
-.b-gen{background:rgba(155,93,229,.2);color:var(--pu)}
-.b-done{background:rgba(0,245,160,.15);color:var(--ok)}
-.b-err{background:rgba(255,71,87,.15);color:var(--er)}
-.preview-body{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:16px;min-height:0;overflow:hidden}
-video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#000;max-height:100%}
+.chip.on{border-color:var(--pu);background:rgba(155,93,229,.18);color:var(--pu)}
+.chip.sp{border-color:#f4a236;background:rgba(244,162,54,.15);color:#f4a236}
+.hint{font-size:10px;color:var(--mu);margin-top:5px;padding:6px 8px;border:1px solid rgba(244,162,54,.2);border-radius:7px;background:rgba(244,162,54,.06);display:none;line-height:1.4}
+.hint.show{display:block}
+.uzone{margin-top:6px;border:2px dashed var(--bd);border-radius:10px;padding:12px;text-align:center;cursor:pointer;position:relative;transition:.2s}
+.uzone:hover,.uzone.over{border-color:var(--pu);background:rgba(155,93,229,.06)}
+.uzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uzone span{font-size:22px}
+.uzone p{font-size:11px;color:var(--mu);margin-top:3px}
+.iprev{position:relative;margin-top:6px}
+.iprev img{width:100%;max-height:100px;object-fit:cover;border-radius:8px;border:1px solid var(--bd)}
+.iclr{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.15);color:white;border-radius:50%;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.iclr:hover{background:rgba(255,71,87,.8)}
+.itag{display:inline-block;margin-top:4px;font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(155,93,229,.15);color:var(--pu)}
+.genbtn{width:100%;padding:12px;background:linear-gradient(135deg,var(--pu),#5a1fb5);border:none;border-radius:10px;color:white;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;margin-top:2px}
+.genbtn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(155,93,229,.4)}
+.genbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.right{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden}
+.pcard{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:14px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.phead{padding:10px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.phead h2{font-size:13px;font-weight:600}
+.bdg{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
+.b0{background:rgba(107,107,128,.2);color:var(--mu)}
+.b1{background:rgba(155,93,229,.2);color:var(--pu)}
+.b2{background:rgba(0,245,160,.15);color:var(--ok)}
+.b3{background:rgba(255,71,87,.15);color:var(--er)}
+.pbody{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;padding:14px;min-height:0;overflow:hidden}
+video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#000}
 .empty{text-align:center;color:var(--mu)}
-.empty-ico{font-size:40px;margin-bottom:10px;opacity:.4}
-.empty-txt{font-size:14px}
-.empty-sub{font-size:12px;margin-top:4px;opacity:.6}
-
-/* Progress */
-.prog-wrap{text-align:center;width:100%;max-width:340px}
-.prog-lbl{font-size:13px;color:var(--mu);margin-bottom:10px}
-.prog-bar-bg{height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
-.prog-bar{height:100%;background:linear-gradient(90deg,var(--pu),var(--cy));border-radius:3px;width:0%;transition:width .5s;animation:sh 2s infinite}
+.ei{font-size:36px;margin-bottom:8px;opacity:.4}
+.et{font-size:13px}
+.es{font-size:11px;margin-top:3px;opacity:.6}
+.pw{text-align:center;width:100%;max-width:320px}
+.pl{font-size:12px;color:var(--mu);margin-bottom:8px}
+.pb{height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.pbi{height:100%;background:linear-gradient(90deg,var(--pu),var(--cy));border-radius:3px;width:0%;transition:width .5s;animation:sh 2s infinite}
 @keyframes sh{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
-.prog-eta{font-size:11px;color:var(--mu);margin-top:6px}
-.spin{width:36px;height:36px;border:3px solid rgba(155,93,229,.2);border-top-color:var(--pu);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 12px}
+.pe{font-size:11px;color:var(--mu);margin-top:5px}
+.spin{width:32px;height:32px;border:3px solid rgba(155,93,229,.2);border-top-color:var(--pu);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 10px}
 @keyframes sp{to{transform:rotate(360deg)}}
-
-/* History */
-.hist-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:12px 16px;flex-shrink:0;max-height:130px;overflow-y:auto}
-.hist-card::-webkit-scrollbar{width:3px}
-.hist-card::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-.hist-empty{font-size:12px;color:var(--mu);text-align:center;padding:8px}
-.hist-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd);cursor:pointer}
-.hist-item:last-child{border-bottom:none}
-.hist-item:hover .hist-p{color:var(--cy)}
-.hist-p{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hist-t{font-size:10px;color:var(--mu);white-space:nowrap}
-.hist-dl{font-size:11px;color:var(--cy);text-decoration:none;padding:2px 7px;border:1px solid rgba(0,212,255,.25);border-radius:5px}
-.hist-dl:hover{background:rgba(0,212,255,.12)}
-
-/* Buttons */
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.btn-dl{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.3);border-radius:8px;color:var(--ok);font-size:13px;text-decoration:none;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
-.btn-dl:hover{background:rgba(0,245,160,.2)}
-.btn-tab{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:8px;color:var(--cy);font-size:13px;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
-.btn-tab:hover{background:rgba(0,212,255,.2)}
-
-/* Modal */
-#modal{position:fixed;inset:0;z-index:100;background:rgba(7,7,15,.95);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center}
-#modal.hidden{display:none}
-.m-card{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:18px;padding:36px;width:420px;max-width:95vw;text-align:center}
-.m-logo{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--pu),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
-.m-sub{color:var(--mu);font-size:13px;margin-bottom:24px}
-.m-lbl{font-size:12px;color:var(--mu);text-align:left;margin-bottom:6px}
-.m-hint{font-size:11px;color:var(--mu);text-align:left;margin-top:5px;margin-bottom:18px}
-.m-hint a{color:var(--cy);text-decoration:none}
-.btn-save{width:100%;padding:12px;background:linear-gradient(135deg,var(--pu),#6a3db5);border:none;border-radius:9px;color:white;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
-.btn-save:hover{opacity:.9}
-
-/* Toast */
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(20,20,40,.95);border:1px solid var(--bd);border-radius:8px;padding:10px 18px;font-size:13px;z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap}
+.hcard{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;flex-shrink:0;max-height:120px;overflow-y:auto}
+.hcard::-webkit-scrollbar{width:3px}
+.hcard::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.he{font-size:11px;color:var(--mu);text-align:center;padding:6px}
+.hi{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd);cursor:pointer}
+.hi:last-child{border-bottom:none}
+.hi:hover .hp{color:var(--cy)}
+.hp{flex:1;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht{font-size:10px;color:var(--mu);white-space:nowrap}
+.hdl{font-size:10px;color:var(--cy);text-decoration:none;padding:2px 6px;border:1px solid rgba(0,212,255,.25);border-radius:4px}
+.hdl:hover{background:rgba(0,212,255,.12)}
+.brow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.bdl{display:inline-flex;align-items:center;gap:4px;padding:7px 14px;background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.3);border-radius:7px;color:var(--ok);font-size:12px;text-decoration:none;cursor:pointer;font-family:'Inter',sans-serif}
+.bdl:hover{background:rgba(0,245,160,.2)}
+.btb{display:inline-flex;align-items:center;gap:4px;padding:7px 14px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:7px;color:var(--cy);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif}
+.btb:hover{background:rgba(0,212,255,.2)}
+#modal{position:fixed;inset:0;z-index:100;background:rgba(7,7,15,.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center}
+#modal.h{display:none}
+.mc{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:18px;padding:32px;width:400px;max-width:95vw;text-align:center}
+.ml{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--pu),var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px}
+.ms{color:var(--mu);font-size:12px;margin-bottom:20px}
+.mi{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:8px;padding:10px 13px;color:var(--tx);font-size:13px;font-family:'Inter',sans-serif;outline:none;margin-bottom:6px}
+.mi:focus{border-color:var(--pu)}
+.mh{font-size:11px;color:var(--mu);text-align:left;margin-bottom:16px}
+.mh a{color:var(--cy);text-decoration:none}
+.msave{width:100%;padding:11px;background:linear-gradient(135deg,var(--pu),#6a3db5);border:none;border-radius:8px;color:white;font-size:14px;font-weight:600;cursor:pointer}
+.msave:hover{opacity:.9}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(20,20,40,.95);border:1px solid var(--bd);border-radius:8px;padding:9px 16px;font-size:12px;z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap}
 #toast.show{opacity:1}
 #toast.ok{border-color:var(--ok);color:var(--ok)}
 #toast.err{border-color:var(--er);color:var(--er)}
 </style>
 </head>
 <body>
-
-<!-- Modal -->
 <div id="modal">
-  <div class="m-card">
-    <div class="m-logo">⚡ Seedance Studio</div>
-    <div class="m-sub">AI Video Generation via OpenRouter</div>
-    <div class="m-lbl">OpenRouter API Key</div>
-    <input id="key-inp" type="password" placeholder="sk-or-v1-..." style="width:100%;background:rgba(255,255,255,.06);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--tx);font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:0"/>
-    <div class="m-hint">Get yours at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> — stored in your browser only.</div>
-    <button class="btn-save" onclick="saveKey()">Launch Studio →</button>
+  <div class="mc">
+    <div class="ml">⚡ Seedance Studio</div>
+    <div class="ms">AI Video Generation via OpenRouter</div>
+    <div style="font-size:11px;color:var(--mu);text-align:left;margin-bottom:5px">OpenRouter API Key</div>
+    <input id="ki" class="mi" type="password" placeholder="sk-or-v1-..."/>
+    <div class="mh">Get yours at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> — saved in your browser only.</div>
+    <button class="msave" onclick="saveKey()">Launch Studio →</button>
   </div>
 </div>
 
 <div id="app">
   <header>
-    <div class="logo"><div class="logo-icon">⚡</div>Seedance Studio</div>
-    <div class="key-pill" onclick="changeKey()"><div class="dot"></div>OpenRouter Connected</div>
+    <div class="logo"><div class="logo-i">⚡</div>Seedance Studio</div>
+    <div class="kpill" onclick="changeKey()"><div class="dot"></div>OpenRouter Connected</div>
   </header>
-
   <main>
-    <!-- Sidebar -->
     <div class="sidebar">
       <div class="card">
-        <div class="section-label">Generate Video</div>
-
+        <div class="slbl">Generate Video</div>
         <label>Prompt</label>
-        <textarea id="prompt" placeholder="A cinematic drone shot over a neon city at night..."></textarea>
-
+        <textarea id="prompt" placeholder="A cinematic shot over a glowing neon city at night..."></textarea>
         <label>Model</label>
         <select id="model">
           <option value="bytedance/seedance-1.5">Seedance 1.5</option>
           <option value="bytedance/seedance-2.0" selected>Seedance 2.0</option>
         </select>
-
         <div class="row2">
           <div>
-            <label>Aspect Ratio</label>
+            <label>Aspect</label>
             <select id="aspect">
               <option value="16:9" selected>16:9</option>
               <option value="9:16">9:16</option>
@@ -193,385 +153,51 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
             </select>
           </div>
         </div>
-
         <label>Duration</label>
         <select id="dur">
           <option value="5">5 seconds</option>
           <option value="10" selected>10 seconds</option>
         </select>
-
-        <label>Style Preset <span style="color:var(--mu);font-size:10px;">(modifies your prompt)</span></label>
-        <div class="style-chips" id="style-chips">
-          <div class="chip active" data-style="none" onclick="setStyle('none')">✦ None</div>
-          <div class="chip" data-style="southpark" onclick="setStyle('southpark')">🏔️ South Park</div>
-          <div class="chip" data-style="anime" onclick="setStyle('anime')">⛩️ Anime</div>
-          <div class="chip" data-style="cinematic" onclick="setStyle('cinematic')">🎥 Cinematic</div>
-          <div class="chip" data-style="pixar" onclick="setStyle('pixar')">🎈 Pixar 3D</div>
+        <label>Style Preset</label>
+        <div class="chips" id="sc">
+          <div class="chip on" data-s="none" onclick="setStyle('none')">✦ None</div>
+          <div class="chip" data-s="sp" onclick="setStyle('sp')">🏔️ South Park</div>
+          <div class="chip" data-s="anime" onclick="setStyle('anime')">⛩️ Anime</div>
+          <div class="chip" data-s="film" onclick="setStyle('film')">🎥 Cinematic</div>
+          <div class="chip" data-s="pixar" onclick="setStyle('pixar')">🎈 Pixar 3D</div>
         </div>
-        <div class="style-hint" id="style-hint"></div>
-
-        <label>Image Input <span style="color:var(--mu);font-size:10px;">(optional)</span></label>
-        <!-- Image mode toggle -->
-        <div style="display:flex;gap:6px;margin-bottom:8px">
-          <div class="chip active" id="mode-frame" data-mode="frame" onclick="setImgMode('frame')" style="font-size:11px">🎬 First Frame</div>
-          <div class="chip" id="mode-ref" data-mode="ref" onclick="setImgMode('ref')" style="font-size:11px">👤 Character Ref</div>
+        <div class="hint" id="sh"></div>
+        <label>Image Input <span style="color:var(--mu);font-size:10px">(optional)</span></label>
+        <div style="display:flex;gap:5px;margin-bottom:6px">
+          <div class="chip on" id="m-frame" onclick="setMode('frame')" style="font-size:10px">🎬 First Frame</div>
+          <div class="chip" id="m-ref" onclick="setMode('ref')" style="font-size:10px">👤 Char Ref</div>
         </div>
-        <div id="img-mode-hint" style="font-size:10px;color:var(--mu);margin-bottom:7px;line-height:1.4">Video starts from this exact image.</div>
-        <div class="upload-zone" id="up-zone"
-             ondragover="ev(event,'over')" ondragleave="ev(event,'out')" ondrop="ev(event,'drop')">
-          <input type="file" id="img-file" accept="image/*" onchange="onFile(event)"/>
+        <div id="mhint" style="font-size:10px;color:var(--mu);margin-bottom:5px">Video starts from this exact image.</div>
+        <div class="uzone" id="uz" ondragover="dz(event,'on')" ondragleave="dz(event,'off')" ondrop="dz(event,'drop')">
+          <input type="file" id="ifile" accept="image/*" onchange="onFile(event)"/>
           <span>🖼️</span>
-          <p>Drop image or click to browse</p>
+          <p>Drop image or click</p>
         </div>
-        <div id="img-wrap" style="display:none" class="img-wrap">
-          <img id="img-prev" src="" alt=""/>
-          <button class="img-clear" onclick="clearImg()">✕</button>
-          <div><span class="img-tag" id="img-mode-tag">🎬 First Frame</span></div>
+        <div id="iw" style="display:none" class="iprev">
+          <img id="ip" src="" alt=""/>
+          <button class="iclr" onclick="clrImg()">✕</button>
+          <div><span class="itag" id="itag">🎬 First Frame</span></div>
         </div>
       </div>
-
-      <button class="btn-gen" id="gen-btn" onclick="generate()">▶ Generate Video</button>
+      <button class="genbtn" id="gb" onclick="gen()">▶ Generate Video</button>
     </div>
-
-    <!-- Right -->
     <div class="right">
-      <div class="preview-card">
-        <div class="preview-head">
-          <h2>Preview</h2>
-          <div class="badge b-idle" id="badge">Idle</div>
-        </div>
-        <div class="preview-body" id="preview">
-          <div class="empty">
-            <div class="empty-ico">🎬</div>
-            <div class="empty-txt">Your video will appear here</div>
-            <div class="empty-sub">Fill in a prompt and hit Generate</div>
-          </div>
+      <div class="pcard">
+        <div class="phead"><h2>Preview</h2><div class="bdg b0" id="bdg">Idle</div></div>
+        <div class="pbody" id="pb">
+          <div class="empty"><div class="ei">🎬</div><div class="et">Your video will appear here</div><div class="es">Enter a prompt and hit Generate</div></div>
         </div>
       </div>
-
-      <div class="hist-card">
-        <div class="section-label">History</div>
-        <div id="hist"></div>
-      </div>
+      <div class="hcard"><div class="slbl">History</div><div id="hl"></div></div>
     </div>
   </main>
 </div>
-
 <div id="toast"></div>
-
-<script>
-let apiKey = localStorage.getItem('or_key') || '';
-let imageB64 = null;
-let imgMode = 'frame'; // 'frame' = first_frame, 'ref' = input_references
-
-const IMG_MODE_HINTS = {
-  frame: 'Video starts from this exact image as the first frame.',
-  ref: 'Image used as character/style reference — keeps your subject consistent throughout.'
-};
-
-function setImgMode(mode) {
-  imgMode = mode;
-  document.getElementById('mode-frame').classList.toggle('active', mode === 'frame');
-  document.getElementById('mode-ref').classList.toggle('active', mode === 'ref');
-  document.getElementById('img-mode-hint').textContent = IMG_MODE_HINTS[mode];
-  const tag = document.getElementById('img-mode-tag');
-  if (tag) tag.textContent = mode === 'frame' ? '🎬 First Frame' : '👤 Character Ref';
-}
-let hist = JSON.parse(localStorage.getItem('sd_hist') || '[]');
-let timer = null;
-let activeStyle = 'none';
-
-const STYLE_PRESETS = {
-  none: { label: null, suffix: '' },
-  southpark: {
-    label: '🏔️ South Park style active — prompt will be wrapped with SP descriptors',
-    suffix: '. Style: South Park animated TV show aesthetic, crude paper cutout 2D animation, flat bold colors, simple geometric character shapes, Comedy Central animation style, intentionally low-budget look, thick black outlines, limited animation, Colorado mountain town setting vibes, satirical comedy cartoon.'
-  },
-  anime: {
-    label: '⛩️ Anime style active',
-    suffix: '. Style: Japanese anime animation style, cel-shaded, vibrant colors, expressive characters, dynamic motion lines, Studio Ghibli or Makoto Shinkai inspired aesthetic.'
-  },
-  cinematic: {
-    label: '🎥 Cinematic style active',
-    suffix: '. Style: cinematic film quality, anamorphic lens flare, shallow depth of field, dramatic lighting, movie color grading, photorealistic, IMAX quality.'
-  },
-  pixar: {
-    label: '🎈 Pixar 3D style active',
-    suffix: '. Style: Pixar CGI animation, warm soft lighting, subsurface scattering, expressive 3D characters, Disney Pixar movie aesthetic, highly detailed textures, smooth animation.'
-  }
-};
-
-if (apiKey) document.getElementById('modal').classList.add('hidden');
-renderHist();
-
-// Style Presets
-function setStyle(key) {
-  activeStyle = key;
-  // Only update style-preset chips, not image-mode chips
-  document.querySelectorAll('#style-chips .chip').forEach(c => {
-    c.classList.remove('active', 'sp-active');
-    if (c.dataset.style === key) {
-      c.classList.add(key === 'southpark' ? 'sp-active' : 'active');
-    }
-  });
-  const hint = document.getElementById('style-hint');
-  const preset = STYLE_PRESETS[key];
-  if (preset && preset.label) {
-    hint.textContent = preset.label;
-    hint.classList.add('show');
-  } else {
-    hint.classList.remove('show');
-  }
-}
-
-// Key
-function saveKey() {
-  const v = document.getElementById('key-inp').value.trim();
-  if (!v) { toast('Enter your API key', 'err'); return; }
-  apiKey = v;
-  localStorage.setItem('or_key', v);
-  document.getElementById('modal').classList.add('hidden');
-  toast('Connected!', 'ok');
-}
-function changeKey() {
-  document.getElementById('key-inp').value = apiKey;
-  document.getElementById('modal').classList.remove('hidden');
-}
-document.getElementById('key-inp').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
-
-// Image upload
-function ev(e, t) {
-  e.preventDefault();
-  const z = document.getElementById('up-zone');
-  if (t === 'over') z.classList.add('over');
-  else if (t === 'out') z.classList.remove('over');
-  else { z.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f && f.type.startsWith('image/')) loadImg(f); }
-}
-function onFile(e) { const f = e.target.files[0]; if (f) loadImg(f); }
-function loadImg(f) {
-  const r = new FileReader();
-  r.onload = e => {
-    imageB64 = e.target.result;
-    document.getElementById('img-prev').src = imageB64;
-    document.getElementById('img-wrap').style.display = 'block';
-    document.getElementById('up-zone').style.display = 'none';
-    toast('Image loaded', 'ok');
-  };
-  r.readAsDataURL(f);
-}
-function clearImg() {
-  imageB64 = null;
-  document.getElementById('img-prev').src = '';
-  document.getElementById('img-wrap').style.display = 'none';
-  document.getElementById('up-zone').style.display = 'block';
-  document.getElementById('img-file').value = '';
-}
-
-// Generate
-async function generate() {
-  if (!apiKey) { changeKey(); return; }
-  const rawPrompt = document.getElementById('prompt').value.trim();
-  if (!rawPrompt) { toast('Enter a prompt', 'err'); return; }
-
-  // Apply style suffix to prompt
-  const styleSuffix = STYLE_PRESETS[activeStyle]?.suffix || '';
-  const prompt = rawPrompt + styleSuffix;
-
-  setBusy(true);
-  setBadge('gen', 'Generating...');
-  showProg(activeStyle !== 'none' ? `Generating with ${activeStyle} style...` : 'Submitting to OpenRouter...');
-
-  const body = {
-    model: document.getElementById('model').value,
-    prompt,
-    aspect_ratio: document.getElementById('aspect').value,
-    resolution: document.getElementById('res').value,
-    duration: parseInt(document.getElementById('dur').value)
-  };
-
-  if (imageB64) {
-    if (imgMode === 'frame') {
-      // Use as the exact first frame of the video
-      body.frame_images = [{ frame_type: 'first_frame', image: imageB64 }];
-    } else {
-      // Use as character/style reference for consistency
-      body.input_references = [{ type: 'image', image: imageB64 }];
-    }
-  }
-
-  try {
-    const r = await fetch('https://openrouter.ai/api/v1/videos', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost',
-        'X-Title': 'Seedance Studio'
-      },
-      body: JSON.stringify(body)
-    });
-
-    const txt = await r.text();
-    console.log('Submit raw response:', txt);
-    let raw;
-    try { raw = JSON.parse(txt); } catch(_) { throw new Error('Bad response: ' + txt.slice(0, 200)); }
-
-    if (!r.ok) throw new Error(raw?.error?.message || raw?.message || `HTTP ${r.status}`);
-
-    // Grab job id + optional status URL from response
-    const jobId = raw.id || raw.job_id || raw.generation_id;
-    const statusUrl = raw.status_url || null;
-    if (!jobId) throw new Error('No job ID. Got: ' + JSON.stringify(raw));
-
-    toast('Job submitted, polling...', 'ok');
-    poll(jobId, statusUrl, prompt, body.model);
-
-  } catch (err) {
-    setBusy(false);
-    setBadge('err', 'Error');
-    showErr(err.message);
-    toast(err.message, 'err');
-  }
-}
-
-// Poll
-function poll(jobId, statusUrl, prompt, model) {
-  let elapsed = 0;
-  const ETA = 90;
-  timer = setInterval(async () => {
-    elapsed += 5;
-    updateProg(Math.min(90, 5 + (elapsed / ETA) * 85), `~${Math.max(0, ETA - elapsed)}s left`);
-    try {
-      // Use status_url if provided, otherwise construct from job ID
-      const pollUrl = statusUrl || `https://openrouter.ai/api/v1/videos/${jobId}`;
-      const r = await fetch(pollUrl, {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
-      });
-      const txt = await r.text();
-      console.log('Poll raw:', txt);
-      let d;
-      try { d = JSON.parse(txt); } catch(_) { console.warn('Poll non-JSON:', txt.slice(0,200)); return; }
-
-      const status = (d.status || '').toLowerCase();
-
-      if (status === 'completed' || status === 'succeeded' || status === 'success') {
-        clearInterval(timer);
-        // OpenRouter returns the video URL in `unsigned_urls` array
-        const url = (d.unsigned_urls && d.unsigned_urls[0]) ||
-          d.video_url || d.url ||
-          d.data?.[0]?.url || d.output?.url ||
-          d.result?.url || d.generations?.[0]?.url ||
-          d.choices?.[0]?.url ||
-          // last resort: direct content endpoint
-          `https://openrouter.ai/api/v1/videos/${jobId}/content`;
-        console.log('Using video URL:', url);
-        updateProg(100, 'Done!');
-        setTimeout(() => showVideo(url, prompt, model), 300);
-
-      } else if (status === 'failed' || status === 'error' || status === 'cancelled') {
-        clearInterval(timer);
-        setBusy(false);
-        setBadge('err', 'Failed');
-        showErr(d.error || d.message || 'Generation failed');
-        toast('Generation failed', 'err');
-      }
-      // any other status (queued, processing) — keep polling
-    } catch(e) {
-      console.warn('Poll fetch err:', e);
-    }
-  }, 5000);
-}
-
-// Display
-async function showVideo(url, prompt, model) {
-  setBusy(false);
-  setBadge('done', 'Complete');
-  const p = document.getElementById('preview');
-  p.innerHTML = `<div class="prog-wrap"><div class="spin"></div><div class="prog-lbl">Loading video...</div></div>`;
-
-  let playUrl = url;
-
-  // /content endpoint requires auth — fetch as blob
-  if (url.includes('/content')) {
-    try {
-      const r = await fetch(url, { headers: { 'Authorization': `Bearer ${apiKey}` } });
-      if (r.ok) {
-        const blob = await r.blob();
-        playUrl = URL.createObjectURL(blob);
-      }
-    } catch(e) { console.warn('Blob fetch failed:', e); }
-  }
-
-  p.innerHTML = `
-    <video controls autoplay loop style="width:100%;height:100%;object-fit:contain;border-radius:8px;background:#000">
-      <source src="${playUrl}" type="video/mp4"/>
-    </video>
-    <div class="btn-row">
-      <a class="btn-dl" href="${playUrl}" download="seedance.mp4" target="_blank">⬇ Download</a>
-      <button class="btn-tab" onclick="window.open('${url}','_blank')">↗ Open in Tab</button>
-    </div>
-  `;
-  // Also save to history
-  hist.unshift({ url, prompt, model, t: Date.now() });
-  if (hist.length > 20) hist.pop();
-  localStorage.setItem('sd_hist', JSON.stringify(hist));
-  renderHist();
-  toast('Video ready! 🎬', 'ok');
-}
-
-function showProg(lbl) {
-  document.getElementById('preview').innerHTML = `
-    <div class="prog-wrap">
-      <div class="spin"></div>
-      <div class="prog-lbl" id="plbl">${lbl}</div>
-      <div class="prog-bar-bg"><div class="prog-bar" id="pbar" style="width:5%"></div></div>
-      <div class="prog-eta" id="peta">Hang tight...</div>
-    </div>`;
-}
-function updateProg(pct, eta) {
-  const b = document.getElementById('pbar'); if (b) b.style.width = pct + '%';
-  const e = document.getElementById('peta'); if (e) e.textContent = eta;
-  const l = document.getElementById('plbl'); if (l) l.textContent = 'Generating...';
-}
-function showErr(msg) {
-  document.getElementById('preview').innerHTML = `
-    <div class="empty">
-      <div class="empty-ico">⚠️</div>
-      <div class="empty-txt" style="color:var(--er)">Failed</div>
-      <div class="empty-sub">${msg}</div>
-    </div>`;
-}
-
-// History
-function renderHist() {
-  const el = document.getElementById('hist');
-  if (!hist.length) { el.innerHTML = '<div class="hist-empty">No videos yet</div>'; return; }
-  el.innerHTML = hist.map((h, i) => `
-    <div class="hist-item" onclick="replayHist(${i})">
-      <div class="hist-p">${h.prompt}</div>
-      <div class="hist-t">${new Date(h.t).toLocaleTimeString()}</div>
-      <a class="hist-dl" href="${h.url}" download target="_blank" onclick="event.stopPropagation()">↓</a>
-    </div>`).join('');
-}
-function replayHist(i) { showVideo(hist[i].url, hist[i].prompt, hist[i].model); }
-
-// Helpers
-function setBusy(on) {
-  const b = document.getElementById('gen-btn');
-  b.disabled = on;
-  b.textContent = on ? '⏳ Generating...' : '▶ Generate Video';
-}
-function setBadge(type, lbl) {
-  const b = document.getElementById('badge');
-  b.className = `badge b-${type}`;
-  b.textContent = lbl;
-}
-let tt;
-function toast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = `show ${type}`;
-  clearTimeout(tt); tt = setTimeout(() => t.className = '', 3000);
-}
-</script>
+<script src="app.js"></script>
 </body>
 </html>
