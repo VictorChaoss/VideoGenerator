@@ -210,7 +210,13 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
         </div>
         <div class="style-hint" id="style-hint"></div>
 
-        <label>Reference Image <span style="color:var(--mu);font-size:10px;">(optional)</span></label>
+        <label>Image Input <span style="color:var(--mu);font-size:10px;">(optional)</span></label>
+        <!-- Image mode toggle -->
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <div class="chip active" id="mode-frame" data-mode="frame" onclick="setImgMode('frame')" style="font-size:11px">🎬 First Frame</div>
+          <div class="chip" id="mode-ref" data-mode="ref" onclick="setImgMode('ref')" style="font-size:11px">👤 Character Ref</div>
+        </div>
+        <div id="img-mode-hint" style="font-size:10px;color:var(--mu);margin-bottom:7px;line-height:1.4">Video starts from this exact image.</div>
         <div class="upload-zone" id="up-zone"
              ondragover="ev(event,'over')" ondragleave="ev(event,'out')" ondrop="ev(event,'drop')">
           <input type="file" id="img-file" accept="image/*" onchange="onFile(event)"/>
@@ -220,7 +226,7 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
         <div id="img-wrap" style="display:none" class="img-wrap">
           <img id="img-prev" src="" alt=""/>
           <button class="img-clear" onclick="clearImg()">✕</button>
-          <div><span class="img-tag">🎬 Image-to-Video</span></div>
+          <div><span class="img-tag" id="img-mode-tag">🎬 First Frame</span></div>
         </div>
       </div>
 
@@ -256,6 +262,21 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
 <script>
 let apiKey = localStorage.getItem('or_key') || '';
 let imageB64 = null;
+let imgMode = 'frame'; // 'frame' = first_frame, 'ref' = input_references
+
+const IMG_MODE_HINTS = {
+  frame: 'Video starts from this exact image as the first frame.',
+  ref: 'Image used as character/style reference — keeps your subject consistent throughout.'
+};
+
+function setImgMode(mode) {
+  imgMode = mode;
+  document.getElementById('mode-frame').classList.toggle('active', mode === 'frame');
+  document.getElementById('mode-ref').classList.toggle('active', mode === 'ref');
+  document.getElementById('img-mode-hint').textContent = IMG_MODE_HINTS[mode];
+  const tag = document.getElementById('img-mode-tag');
+  if (tag) tag.textContent = mode === 'frame' ? '🎬 First Frame' : '👤 Character Ref';
+}
 let hist = JSON.parse(localStorage.getItem('sd_hist') || '[]');
 let timer = null;
 let activeStyle = 'none';
@@ -368,7 +389,16 @@ async function generate() {
     resolution: document.getElementById('res').value,
     duration: parseInt(document.getElementById('dur').value)
   };
-  if (imageB64) body.image = imageB64;
+
+  if (imageB64) {
+    if (imgMode === 'frame') {
+      // Use as the exact first frame of the video
+      body.frame_images = [{ frame_type: 'first_frame', image: imageB64 }];
+    } else {
+      // Use as character/style reference for consistency
+      body.input_references = [{ type: 'image', image: imageB64 }];
+    }
+  }
 
   try {
     const r = await fetch('https://openrouter.ai/api/v1/videos', {
