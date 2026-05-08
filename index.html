@@ -372,6 +372,67 @@
     }
     .btn-download:hover { background: rgba(0,245,160,0.2); }
 
+    /* IMAGE UPLOAD */
+    .upload-zone {
+      margin-top: 16px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--purple);
+      background: rgba(155,93,229,0.07);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 28px; margin-bottom: 6px; }
+    .upload-text { font-size: 13px; color: var(--muted); }
+    .upload-sub { font-size: 11px; color: var(--muted); opacity: 0.6; margin-top: 3px; }
+
+    .img-preview-wrap {
+      margin-top: 10px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .img-preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .img-clear {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      border-radius: 50%;
+      width: 24px; height: 24px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .img-clear:hover { background: rgba(255,71,87,0.7); }
+    .img-mode-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(155,93,229,0.15);
+      color: var(--purple);
+    }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       main { grid-template-columns: 1fr; }
@@ -451,6 +512,23 @@
         <option value="10" selected>10s</option>
       </select>
 
+      <label>Reference Image <span style="color:var(--muted);font-weight:400;font-size:11px;">(optional — image-to-video)</span></label>
+      <div class="upload-zone" id="upload-zone"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <input type="file" id="img-input" accept="image/png,image/jpeg,image/webp,image/gif"
+               onchange="handleFileSelect(event)" />
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text">Drop an image or click to browse</div>
+        <div class="upload-sub">PNG, JPG, WEBP — used as the starting frame</div>
+      </div>
+      <div id="img-preview-wrap" style="display:none;" class="img-preview-wrap">
+        <img id="img-preview" class="img-preview" src="" alt="Preview" />
+        <button class="img-clear" onclick="clearImage()" title="Remove image">✕</button>
+        <div><span class="img-mode-tag">🎬 Image-to-Video mode</span></div>
+      </div>
+
       <button class="btn-generate" id="gen-btn" onclick="generateVideo()">
         <span id="btn-text">▶ Generate Video</span>
       </button>
@@ -491,6 +569,7 @@
   let apiKey = localStorage.getItem('or_api_key') || '';
   let history = JSON.parse(localStorage.getItem('seedance_history') || '[]');
   let polling = null;
+  let uploadedImageBase64 = null; // base64 data URI of uploaded image
 
   // ── Init ───────────────────────────────────────────────
   if (apiKey) {
@@ -538,6 +617,10 @@
 
     try {
       const body = { model, prompt, aspect_ratio, resolution, duration };
+      if (uploadedImageBase64) {
+        // Send the base64 image as the reference/starting frame
+        body.image = uploadedImageBase64;
+      }
       const res = await fetch('https://openrouter.ai/api/v1/videos', {
         method: 'POST',
         headers: {
@@ -684,6 +767,50 @@
   function replayVideo(i) {
     const h = history[i];
     showVideo(h.url, h.prompt, h.model);
+  }
+
+  // ── Image Upload ───────────────────────────────────────
+  function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) loadImage(file);
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('upload-zone').classList.add('drag-over');
+  }
+
+  function handleDragLeave(e) {
+    document.getElementById('upload-zone').classList.remove('drag-over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('upload-zone').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadImage(file);
+    else showToast('Please drop an image file', 'error');
+  }
+
+  function loadImage(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedImageBase64 = e.target.result; // full data URI
+      document.getElementById('img-preview').src = uploadedImageBase64;
+      document.getElementById('img-preview-wrap').style.display = 'block';
+      document.getElementById('upload-zone').style.display = 'none';
+      showToast('Image loaded — image-to-video mode active', 'success');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    uploadedImageBase64 = null;
+    document.getElementById('img-preview').src = '';
+    document.getElementById('img-preview-wrap').style.display = 'none';
+    document.getElementById('upload-zone').style.display = 'block';
+    document.getElementById('img-input').value = '';
+    showToast('Image removed — text-to-video mode', '');
   }
 
   // ── Helpers ────────────────────────────────────────────
