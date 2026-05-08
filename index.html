@@ -65,6 +65,15 @@ select option{background:#12121f}
 .btn-gen:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(155,93,229,.4)}
 .btn-gen:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
 
+/* Style Presets */
+.style-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--mu);cursor:pointer;transition:.2s;user-select:none}
+.chip:hover{border-color:var(--pu);color:var(--tx)}
+.chip.active{border-color:var(--pu);background:rgba(155,93,229,.18);color:var(--pu)}
+.chip.sp-active{border-color:#f4a236;background:rgba(244,162,54,.15);color:#f4a236}
+.style-hint{font-size:10px;color:var(--mu);margin-top:6px;padding:7px 10px;background:rgba(244,162,54,.07);border:1px solid rgba(244,162,54,.2);border-radius:8px;line-height:1.5;display:none}
+.style-hint.show{display:block}
+
 /* RIGHT PANEL */
 .right{display:flex;flex-direction:column;gap:12px;min-height:0}
 .preview-card{flex:1;background:var(--s1);border:1px solid var(--bd);border-radius:14px;display:flex;flex-direction:column;min-height:0}
@@ -191,6 +200,16 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
           <option value="10" selected>10 seconds</option>
         </select>
 
+        <label>Style Preset <span style="color:var(--mu);font-size:10px;">(modifies your prompt)</span></label>
+        <div class="style-chips" id="style-chips">
+          <div class="chip active" data-style="none" onclick="setStyle('none')">✦ None</div>
+          <div class="chip" data-style="southpark" onclick="setStyle('southpark')">🏔️ South Park</div>
+          <div class="chip" data-style="anime" onclick="setStyle('anime')">⛩️ Anime</div>
+          <div class="chip" data-style="cinematic" onclick="setStyle('cinematic')">🎥 Cinematic</div>
+          <div class="chip" data-style="pixar" onclick="setStyle('pixar')">🎈 Pixar 3D</div>
+        </div>
+        <div class="style-hint" id="style-hint"></div>
+
         <label>Reference Image <span style="color:var(--mu);font-size:10px;">(optional)</span></label>
         <div class="upload-zone" id="up-zone"
              ondragover="ev(event,'over')" ondragleave="ev(event,'out')" ondrop="ev(event,'drop')">
@@ -239,9 +258,51 @@ let apiKey = localStorage.getItem('or_key') || '';
 let imageB64 = null;
 let hist = JSON.parse(localStorage.getItem('sd_hist') || '[]');
 let timer = null;
+let activeStyle = 'none';
+
+const STYLE_PRESETS = {
+  none: { label: null, suffix: '' },
+  southpark: {
+    label: '🏔️ South Park style active — prompt will be wrapped with SP descriptors',
+    suffix: '. Style: South Park animated TV show aesthetic, crude paper cutout 2D animation, flat bold colors, simple geometric character shapes, Comedy Central animation style, intentionally low-budget look, thick black outlines, limited animation, Colorado mountain town setting vibes, satirical comedy cartoon.'
+  },
+  anime: {
+    label: '⛩️ Anime style active',
+    suffix: '. Style: Japanese anime animation style, cel-shaded, vibrant colors, expressive characters, dynamic motion lines, Studio Ghibli or Makoto Shinkai inspired aesthetic.'
+  },
+  cinematic: {
+    label: '🎥 Cinematic style active',
+    suffix: '. Style: cinematic film quality, anamorphic lens flare, shallow depth of field, dramatic lighting, movie color grading, photorealistic, IMAX quality.'
+  },
+  pixar: {
+    label: '🎈 Pixar 3D style active',
+    suffix: '. Style: Pixar CGI animation, warm soft lighting, subsurface scattering, expressive 3D characters, Disney Pixar movie aesthetic, highly detailed textures, smooth animation.'
+  }
+};
 
 if (apiKey) document.getElementById('modal').classList.add('hidden');
 renderHist();
+
+// Style Presets
+function setStyle(key) {
+  activeStyle = key;
+  // Update chip states
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.remove('active', 'sp-active');
+    if (c.dataset.style === key) {
+      c.classList.add(key === 'southpark' ? 'sp-active' : 'active');
+    }
+  });
+  // Show/hide hint
+  const hint = document.getElementById('style-hint');
+  const preset = STYLE_PRESETS[key];
+  if (preset && preset.label) {
+    hint.textContent = preset.label;
+    hint.classList.add('show');
+  } else {
+    hint.classList.remove('show');
+  }
+}
 
 // Key
 function saveKey() {
@@ -289,12 +350,16 @@ function clearImg() {
 // Generate
 async function generate() {
   if (!apiKey) { changeKey(); return; }
-  const prompt = document.getElementById('prompt').value.trim();
-  if (!prompt) { toast('Enter a prompt', 'err'); return; }
+  const rawPrompt = document.getElementById('prompt').value.trim();
+  if (!rawPrompt) { toast('Enter a prompt', 'err'); return; }
+
+  // Apply style suffix to prompt
+  const styleSuffix = STYLE_PRESETS[activeStyle]?.suffix || '';
+  const prompt = rawPrompt + styleSuffix;
 
   setBusy(true);
   setBadge('gen', 'Generating...');
-  showProg('Submitting to OpenRouter...');
+  showProg(activeStyle !== 'none' ? `Generating with ${activeStyle} style...` : 'Submitting to OpenRouter...');
 
   const body = {
     model: document.getElementById('model').value,
