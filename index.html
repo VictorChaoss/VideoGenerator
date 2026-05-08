@@ -307,14 +307,13 @@ renderHist();
 // Style Presets
 function setStyle(key) {
   activeStyle = key;
-  // Update chip states
-  document.querySelectorAll('.chip').forEach(c => {
+  // Only update style-preset chips, not image-mode chips
+  document.querySelectorAll('#style-chips .chip').forEach(c => {
     c.classList.remove('active', 'sp-active');
     if (c.dataset.style === key) {
       c.classList.add(key === 'southpark' ? 'sp-active' : 'active');
     }
   });
-  // Show/hide hint
   const hint = document.getElementById('style-hint');
   const preset = STYLE_PRESETS[key];
   if (preset && preset.label) {
