@@ -362,14 +362,15 @@ function poll(jobId, statusUrl, prompt, model) {
 
       if (status === 'completed' || status === 'succeeded' || status === 'success') {
         clearInterval(timer);
-        const url = d.video_url || d.url ||
+        // OpenRouter returns the video URL in `unsigned_urls` array
+        const url = (d.unsigned_urls && d.unsigned_urls[0]) ||
+          d.video_url || d.url ||
           d.data?.[0]?.url || d.output?.url ||
           d.result?.url || d.generations?.[0]?.url ||
-          d.choices?.[0]?.url;
-        if (!url) {
-          showErr('Done but no video URL — check browser console for raw response.');
-          setBusy(false); setBadge('err', 'No URL'); return;
-        }
+          d.choices?.[0]?.url ||
+          // last resort: direct content endpoint
+          `https://openrouter.ai/api/v1/videos/${jobId}/content`;
+        console.log('Using video URL:', url);
         updateProg(100, 'Done!');
         setTimeout(() => showVideo(url, prompt, model), 300);
 
@@ -388,16 +389,31 @@ function poll(jobId, statusUrl, prompt, model) {
 }
 
 // Display
-function showVideo(url, prompt, model) {
+async function showVideo(url, prompt, model) {
   setBusy(false);
   setBadge('done', 'Complete');
   const p = document.getElementById('preview');
+  p.innerHTML = `<div class="prog-wrap"><div class="spin"></div><div class="prog-lbl">Loading video...</div></div>`;
+
+  let playUrl = url;
+
+  // /content endpoint requires auth — fetch as blob
+  if (url.includes('/content')) {
+    try {
+      const r = await fetch(url, { headers: { 'Authorization': `Bearer ${apiKey}` } });
+      if (r.ok) {
+        const blob = await r.blob();
+        playUrl = URL.createObjectURL(blob);
+      }
+    } catch(e) { console.warn('Blob fetch failed:', e); }
+  }
+
   p.innerHTML = `
     <video controls autoplay loop style="width:100%;height:100%;object-fit:contain;border-radius:8px;background:#000">
-      <source src="${url}" type="video/mp4"/>
+      <source src="${playUrl}" type="video/mp4"/>
     </video>
     <div class="btn-row">
-      <a class="btn-dl" href="${url}" download="seedance.mp4" target="_blank">⬇ Download</a>
+      <a class="btn-dl" href="${playUrl}" download="seedance.mp4" target="_blank">⬇ Download</a>
       <button class="btn-tab" onclick="window.open('${url}','_blank')">↗ Open in Tab</button>
     </div>
   `;
