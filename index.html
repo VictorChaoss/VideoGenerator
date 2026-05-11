@@ -310,7 +310,8 @@ async function gen() {
     prompt,
     aspect_ratio: val('aspect'),
     resolution: val('res'),
-    duration: parseInt(val('dur'))
+    duration: parseInt(val('dur')),
+    generate_audio: false
   };
 
   if (imgB64) {
@@ -474,3 +475,4 @@ function toast(msg, type='') {
   clearTimeout(tt); tt = setTimeout(() => t.className = '', 3000);
 }
 </script>
+</body></html>

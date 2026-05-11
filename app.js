@@ -107,7 +107,8 @@ async function gen() {
     prompt,
     aspect_ratio: val('aspect'),
     resolution: val('res'),
-    duration: parseInt(val('dur'))
+    duration: parseInt(val('dur')),
+    generate_audio: false
   };
 
   if (imgB64) {
