@@ -18,6 +18,22 @@ const STYLES = {
 if (apiKey) hide('modal');
 renderHist();
 
+// Audio toggle UI
+document.getElementById('audio-toggle').addEventListener('change', function() {
+  const knob = document.getElementById('audio-knob');
+  const track = this.nextElementSibling;
+  if (this.checked) {
+    knob.style.transform = 'translateX(16px)';
+    knob.style.backgroundColor = 'var(--ok)';
+    track.style.borderColor = 'var(--ok)';
+    toast('Audio enabled (Expect higher failure rate)', '');
+  } else {
+    knob.style.transform = 'translateX(0)';
+    knob.style.backgroundColor = 'var(--mu)';
+    track.style.borderColor = 'var(--bd)';
+  }
+});
+
 // Key
 function saveKey() {
   const v = val('ki').trim();
@@ -108,7 +124,7 @@ async function gen() {
     aspect_ratio: val('aspect'),
     resolution: val('res'),
     duration: parseInt(val('dur')),
-    generate_audio: false
+    generate_audio: document.getElementById('audio-toggle').checked
   };
 
   if (imgB64) {

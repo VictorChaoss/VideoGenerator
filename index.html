@@ -183,6 +183,18 @@ video{width:100%;height:100%;object-fit:contain;border-radius:8px;background:#00
           <button class="iclr" onclick="clrImg()">✕</button>
           <div><span class="itag" id="itag">🎬 First Frame</span></div>
         </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:10px">
+          <div>
+            <div style="font-size:12px;font-weight:500;color:var(--tx)">Generate Audio</div>
+            <div style="font-size:10px;color:var(--er);margin-top:2px">High chance of failing due to moderation</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:36px;height:20px;margin:0">
+            <input type="checkbox" id="audio-toggle" style="opacity:0;width:0;height:0">
+            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:rgba(255,255,255,.1);transition:.3s;border-radius:20px;border:1px solid var(--bd)">
+              <span id="audio-knob" style="position:absolute;content:'';height:14px;width:14px;left:2px;bottom:2px;background-color:var(--mu);transition:.3s;border-radius:50%"></span>
+            </span>
+          </label>
+        </div>
       </div>
       <button class="genbtn" id="gb" onclick="gen()">▶ Generate Video</button>
     </div>
@@ -220,6 +232,22 @@ const STYLES = {
 // Init
 if (apiKey) hide('modal');
 renderHist();
+
+// Audio toggle UI
+document.getElementById('audio-toggle').addEventListener('change', function() {
+  const knob = document.getElementById('audio-knob');
+  const track = this.nextElementSibling;
+  if (this.checked) {
+    knob.style.transform = 'translateX(16px)';
+    knob.style.backgroundColor = 'var(--ok)';
+    track.style.borderColor = 'var(--ok)';
+    toast('Audio enabled (Expect higher failure rate)', '');
+  } else {
+    knob.style.transform = 'translateX(0)';
+    knob.style.backgroundColor = 'var(--mu)';
+    track.style.borderColor = 'var(--bd)';
+  }
+});
 
 // Key
 function saveKey() {
@@ -311,7 +339,7 @@ async function gen() {
     aspect_ratio: val('aspect'),
     resolution: val('res'),
     duration: parseInt(val('dur')),
-    generate_audio: false
+    generate_audio: document.getElementById('audio-toggle').checked
   };
 
   if (imgB64) {
