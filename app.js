@@ -112,8 +112,8 @@ async function gen() {
 
   if (imgB64) {
     if (imgMode === 'frame') {
-      // First frame: image_url object with the data URI
-      body.frame_images = [{ frame_type: 'first_frame', image_url: { url: imgB64 } }];
+      // First frame: object needs both type: 'image_url' and the image_url object
+      body.frame_images = [{ type: 'image_url', image_url: { url: imgB64 } }];
     } else {
       // Character reference: type must be "image_url", image in image_url.url
       body.input_references = [{ type: 'image_url', image_url: { url: imgB64 } }];
